@@ -1,14 +1,15 @@
 import Array "mo:base/Array";
-import AssocList "mo:base/AssocList";
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
 import Nat32 "mo:base/Nat32";
+
+import AL "AssociationList";
 
 module {
     // Based on "mo:base/HashMap".
 
     public type HashMap<K, V> = {
-        var table : [var AssocList.AssocList<K, V>];
+        var table : [var AL.AssociationList<K, V>];
         var size  : Nat;
     };
 
@@ -37,8 +38,8 @@ module {
         if (s == 0) return (m, null);
 
         let n = Nat32.toNat(hash(k)) % s;
-        let (kv, ov) = AssocList.replace<K, V>(
-            m.table[n], k, equal, null,
+        let (kv, ov) = AL.delete<K, V>(
+            m.table[n], k, equal,
         );
         m.table[n] := kv;
         switch(ov){
@@ -58,10 +59,10 @@ module {
         let s = m.table.size();
         if (0 == s) return null;
 
-        AssocList.find<K, V>(m.table[Nat32.toNat(hash(k)) % s], k, equal);
+        AL.get<K, V>(m.table[Nat32.toNat(hash(k)) % s], k, equal);
     };
 
-    /// Insertsm the value 'v' at key 'k' and returns the previous value stored at 'k'.
+    /// Inserts the value 'v' at key 'k' and returns the previous value stored at 'k'.
     public func insert<K, V>(
         m     : HashMap<K, V>,
         k     : K,
@@ -75,7 +76,7 @@ module {
         if (s <= m.size) {
             // Double the table size.
             let size = if (m.size == 0) { 1; } else { s * 2; };
-            let table_ = Array.init<AssocList.AssocList<K, V>>(size, null);
+            let table_ = Array.init<AL.AssociationList<K, V>>(size, null);
             for (i in m.table.keys()) {
                 var kvs = m.table[i];
                 label l loop {
@@ -93,8 +94,8 @@ module {
         };
 
         let n = Nat32.toNat(hash(k)) % m.table.size();
-        let (kv, ov) = AssocList.replace<K, V>(
-            m.table[n], k, equal, ?v,
+        let (kv, ov) = AL.insert<K, V>(
+            m.table[n], k, equal, v,
         );
         m.table[n] := kv;
         switch(ov){
