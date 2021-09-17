@@ -1,6 +1,7 @@
 import Array "mo:base/Array";
 import AssocList "mo:base/AssocList";
 import Hash "mo:base/Hash";
+import Iter "mo:base/Iter";
 import Nat32 "mo:base/Nat32";
 
 module {
@@ -23,16 +24,6 @@ module {
         m : HashMap<K, V>,
     ) : Nat {
         m.size;
-    };
-
-    /// Deletes the entry with the key 'k'. Does not do anything if the key does not exist.
-    public func delete<K, V>(
-        m     : HashMap<K, V>,
-        k     : K,
-        hash  : (K) -> Hash.Hash,
-        equal : (K, K) -> Bool,
-    ) {
-        ignore remove(m, k, hash, equal);
     };
 
     /// Removes the entry with the key 'k' and returns the removed value and the new HashMap.
@@ -70,17 +61,8 @@ module {
         AssocList.find<K, V>(m.table[Nat32.toNat(hash(k)) % s], k, equal);
     };
 
-    /// Replaces the value 'v' at key 'k'.
-    public func put<K, V>(
-        m     : HashMap<K, V>,
-        k     : K,
-        hash  : (K) -> Hash.Hash,
-        equal : (K, K) -> Bool,
-        v     : V,
-    ) = ignore replace(m, k, hash, equal, v);
-
-    /// Replaces the value 'v' at key 'k' and returns the previous value stored at 'k'.
-    public func replace<K, V>(
+    /// Insertsm the value 'v' at key 'k' and returns the previous value stored at 'k'.
+    public func insert<K, V>(
         m     : HashMap<K, V>,
         k     : K,
         hash  : (K) -> Hash.Hash,
@@ -120,5 +102,31 @@ module {
             case (? _)  {}; // Value was replaced.
         };
         (m, ov);
+    };
+
+    public func entries<K, V>(
+        m : HashMap<K, V>,
+    ) : Iter.Iter<(K, V)> {
+        var table = m.table;
+        if (table.size() == 0) return object {
+            public func next() : ?(K, V) { null };
+        };
+        object {
+            var kvs = table[0];
+            var i   = 1;
+            public func next() : ?(K, V) {
+                switch (kvs) {
+                    case (? (kv, ks)) {
+                        kvs := ks;
+                        ?kv;
+                    };
+                    case (null) {
+                        if (i < table.size()) return null;
+                        kvs := table[i]; i += 1;
+                        next();
+                    };
+                };
+            };
+        };
     };
 };
