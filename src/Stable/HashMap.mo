@@ -1,13 +1,30 @@
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
+import Result "mo:base/Result";
 
 import HM "../HashMap";
+import Stable "Stable";
 
 module {
+    public func fromStable<K, V>(
+        s     : HM.HashMap<K, V>,
+        hash  : (K) -> Hash.Hash,
+        equal : (K, K) -> Bool,
+    ) : Result.Result<HashMap<K, V>, V> {
+        let m = HashMap<K, V>(hash, equal);
+        for ((k, v) in HM.entries(s)) {
+            switch (m.replace(k, v)) {
+                case (null) {};
+                case (? ov) return #err(ov);
+            };
+        };
+        #ok(m);
+    };
+
     public class HashMap<K, V>(
         hash  : (K) -> Hash.Hash,
         equal : (K, K) -> Bool,
-    ) {
+    ) : Stable.Stable<HM.HashMap<K, V>> {
         var m : HM.HashMap<K, V> = HM.empty<K, V>();
 
         private func update((m_, ov) : (HM.HashMap<K, V>, ?V)) : ?V { m := m_; ov; };
@@ -25,5 +42,7 @@ module {
         public func replace(k : K, v : V) : ?V = update(HM.insert(m, k, hash, equal, v));
 
         public func entries() : Iter.Iter<(K, V)> = HM.entries(m);
+
+        public func toStable() : HM.HashMap<K, V> = m;
     };
 };

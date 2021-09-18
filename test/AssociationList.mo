@@ -22,4 +22,6 @@ do {
     assert(LL.size(l) == 2);
     assert(update(AL.delete(l, "a", equal)) == null);
     assert(LL.size(l) == 2);
+    assert(update(AL.insert(l, "a", equal, 0)) == null);
+    assert(LL.size(l) == 3);
 };

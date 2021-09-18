@@ -122,7 +122,7 @@ module {
                         ?kv;
                     };
                     case (null) {
-                        if (i < table.size()) return null;
+                        if (table.size() <= i) return null;
                         kvs := table[i]; i += 1;
                         next();
                     };
