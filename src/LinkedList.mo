@@ -1,4 +1,4 @@
-import Array "mo:base/Array";
+import Array "mo:base-0.7.3/Array";
 
 module {
     public type LinkedList<V> = ?(V, LinkedList<V>);

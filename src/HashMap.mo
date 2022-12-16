@@ -1,12 +1,12 @@
-import Array "mo:base/Array";
-import Hash "mo:base/Hash";
-import Iter "mo:base/Iter";
-import Nat32 "mo:base/Nat32";
+import Array "mo:base-0.7.3/Array";
+import Hash "mo:base-0.7.3/Hash";
+import Iter "mo:base-0.7.3/Iter";
+import Nat32 "mo:base-0.7.3/Nat32";
 
 import AL "AssociationList";
 
 module {
-    // Based on "mo:base/HashMap".
+    // Based on "mo:base-0.7.3/HashMap".
 
     public type HashMap<K, V> = {
         var table : [var AL.AssociationList<K, V>];

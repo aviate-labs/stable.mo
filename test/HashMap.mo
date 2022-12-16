@@ -1,5 +1,5 @@
-import Iter "mo:base/Iter";
-import Text "mo:base/Text";
+import Iter "mo:base-0.7.3/Iter";
+import Text "mo:base-0.7.3/Text";
 
 import HM "../src/HashMap";
 import SHM "../src/Stable/HashMap";

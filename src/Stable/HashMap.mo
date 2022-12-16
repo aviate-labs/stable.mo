@@ -1,6 +1,6 @@
-import Hash "mo:base/Hash";
-import Iter "mo:base/Iter";
-import Result "mo:base/Result";
+import Hash "mo:base-0.7.3/Hash";
+import Iter "mo:base-0.7.3/Iter";
+import Result "mo:base-0.7.3/Result";
 
 import HM "../HashMap";
 import Stable "Stable";

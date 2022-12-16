@@ -1,4 +1,4 @@
-import Text "mo:base/Text";
+import Text "mo:base-0.7.3/Text";
 
 import AL "../src/AssociationList";
 import LL "../src/LinkedList";
